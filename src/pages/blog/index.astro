@@ -52,11 +52,15 @@ const posts = (await getCollection('blog')).sort(
 			}
 			ul li a {
 				display: block;
+				padding: 1rem;
+				background: var(--paper-surface);
+				border: 1px solid var(--paper-rule);
+				border-radius: 3px;
 			}
 			.title {
 				margin: 0;
 				color: rgb(var(--black));
-				line-height: 1;
+				line-height: 1.5;
 			}
 			.date {
 				margin: 0;

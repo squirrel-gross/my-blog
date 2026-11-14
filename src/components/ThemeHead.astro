@@ -1,0 +1,136 @@
+---
+import backgrounds from '../data/backgrounds.json';
+---
+
+<script is:inline define:vars={{ backgrounds }}>
+	(() => {
+		const root = document.documentElement;
+		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+		const mobile = window.matchMedia('(max-width: 720px)');
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const read = (key) => {
+			try { return localStorage.getItem(key); } catch { return null; }
+		};
+		const write = (key, value) => {
+			try { localStorage.setItem(key, value); } catch {}
+		};
+		const savedTheme = read('blog-theme');
+		let manualTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : null;
+		let theme = manualTheme || (systemTheme.matches ? 'dark' : 'light');
+		const selected = {};
+		for (const mode of ['light', 'dark']) {
+			const saved = read(`blog-background-${mode}`);
+			selected[mode] = backgrounds[mode].findIndex((image) => image.id === saved);
+			if (selected[mode] < 0) selected[mode] = 0;
+		}
+		let request = 0;
+		let fadeTimer;
+		const current = () => backgrounds[theme][selected[theme]];
+		const imageURL = (image) => mobile.matches ? image.mobile : image.file;
+		const announce = (text) => {
+			const status = document.querySelector('[data-appearance-status]');
+			if (status) status.textContent = text;
+		};
+		const sync = () => {
+			const toggle = document.querySelector('[data-theme-toggle]');
+			const next = theme === 'dark' ? '浅色' : '深色';
+			if (toggle) {
+				toggle.setAttribute('aria-label', `切换到${next}模式`);
+				toggle.title = `切换到${next}模式`;
+			}
+			const backgroundButton = document.querySelector('[data-background-toggle]');
+			if (backgroundButton) backgroundButton.title = `切换背景 · 当前：${current().name}`;
+			const credit = document.querySelector('[data-background-credit]');
+			if (credit) {
+				credit.textContent = `${current().name} · ${current().photographer} / Unsplash`;
+				credit.href = current().source;
+			}
+		};
+		const setBackground = (initial = false) => {
+			const version = ++request;
+			clearTimeout(fadeTimer);
+			root.classList.remove('background-fading');
+			root.style.removeProperty('--background-next');
+			const image = current();
+			const url = imageURL(image);
+			const cssURL = `url("${url}")`;
+			root.style.setProperty('--background-position', image.position || 'center');
+			if (initial) root.style.setProperty('--background-current', cssURL);
+			const preload = new Image();
+			preload.onload = () => {
+				if (version !== request) return;
+				if (initial || reducedMotion.matches) {
+					root.style.setProperty('--background-current', cssURL);
+					return;
+				}
+				root.style.setProperty('--background-next', cssURL);
+				requestAnimationFrame(() => requestAnimationFrame(() => {
+					if (version !== request) return;
+					root.classList.add('background-fading');
+					fadeTimer = setTimeout(() => {
+						if (version !== request) return;
+						root.style.setProperty('--background-current', cssURL);
+						root.classList.remove('background-fading');
+						root.style.removeProperty('--background-next');
+					}, 460);
+				}));
+			};
+			preload.onerror = () => {
+				if (version !== request) return;
+				root.style.setProperty('--background-current', 'none');
+				announce('背景图片暂时无法加载，已使用纯色阅读背景。');
+			};
+			preload.src = url;
+		};
+		const applyTheme = () => {
+			root.dataset.theme = theme;
+			root.style.colorScheme = theme;
+			sync();
+		};
+		applyTheme();
+		setBackground(true);
+		const bind = () => {
+			const controls = document.querySelector('[data-appearance-controls]');
+			if (!controls || controls.dataset.bound) return;
+			controls.dataset.bound = 'true';
+			controls.hidden = false;
+			controls.querySelector('[data-theme-toggle]').addEventListener('click', () => {
+				theme = theme === 'dark' ? 'light' : 'dark';
+				manualTheme = theme;
+				write('blog-theme', theme);
+				applyTheme();
+				setBackground();
+				announce(`已切换到${theme === 'dark' ? '深色' : '浅色'}模式，背景：${current().name}。`);
+			});
+			controls.querySelector('[data-background-toggle]').addEventListener('click', () => {
+				selected[theme] = (selected[theme] + 1) % backgrounds[theme].length;
+				write(`blog-background-${theme}`, current().id);
+				sync();
+				setBackground();
+				announce(`背景已切换为${current().name}。`);
+			});
+			sync();
+			requestAnimationFrame(() => { root.dataset.appearanceReady = 'true'; });
+		};
+		if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind, { once: true });
+		else bind();
+		window.addEventListener('pageshow', () => {
+			const stored = read('blog-theme');
+			if (stored === 'dark' || stored === 'light') manualTheme = stored;
+			theme = manualTheme || (systemTheme.matches ? 'dark' : 'light');
+			for (const mode of ['light', 'dark']) {
+				const index = backgrounds[mode].findIndex((image) => image.id === read(`blog-background-${mode}`));
+				if (index >= 0) selected[mode] = index;
+			}
+			applyTheme();
+			setBackground(true);
+		});
+		systemTheme.addEventListener('change', () => {
+			if (manualTheme) return;
+			theme = systemTheme.matches ? 'dark' : 'light';
+			applyTheme();
+			setBackground();
+		});
+		mobile.addEventListener('change', () => setBackground(true));
+	})();
+</script>

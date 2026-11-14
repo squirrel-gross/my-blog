@@ -38,13 +38,18 @@ const today = new Date();
 			>
 		</a>
 	</div>
+	<p class="background-credit"><a data-background-credit href="https://unsplash.com/license" target="_blank" rel="noopener noreferrer">背景摄影 · Unsplash</a></p>
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		padding: 2.5rem 1rem;
+		margin-top: auto;
+		background: var(--bar-surface);
+		border-top: 1px solid var(--paper-rule);
 		color: rgb(var(--gray));
 		text-align: center;
+		font-family: var(--font-ui);
+		font-size: 0.8rem;
 	}
 	.social-links {
 		display: flex;
@@ -59,4 +64,7 @@ const today = new Date();
 	.social-links a:hover {
 		color: rgb(var(--gray-dark));
 	}
+	.social-links svg { width: 20px; height: 20px; }
+	.background-credit { margin: 1.25rem 0 0; font-size: 0.75rem; }
+	.background-credit a { color: inherit; }
 </style>

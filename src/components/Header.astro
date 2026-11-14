@@ -1,6 +1,7 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import ThemeControls from './ThemeControls.astro';
 ---
 
 <header>
@@ -41,13 +42,19 @@ import HeaderLink from './HeaderLink.astro';
 			</a>
 		</div>
 	</nav>
+	<ThemeControls />
 </header>
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		padding: 0.25rem clamp(1rem, 4vw, 3rem);
+		background: var(--bar-surface);
+		border-bottom: 1px solid var(--paper-rule);
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		font-family: var(--font-ui);
+		font-size: 0.9rem;
 	}
 	h2 {
 		margin: 0;
@@ -62,10 +69,13 @@ import HeaderLink from './HeaderLink.astro';
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		flex: 1;
+		min-width: 0;
+		gap: 1rem;
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: rgb(var(--black));
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
 	}
@@ -77,7 +87,13 @@ import HeaderLink from './HeaderLink.astro';
 	.social-links a {
 		display: flex;
 	}
+	.social-links svg { width: 20px; height: 20px; }
+	.internal-links { display: flex; }
 	@media (max-width: 720px) {
+		header { flex-wrap: wrap; gap: 0.25rem 0.5rem; }
+		nav { flex-wrap: wrap; gap: 0; }
+		h2 { flex-basis: 100%; }
+		nav a { padding: 0.65rem 0.45rem; }
 		.social-links {
 			display: none;
 		}

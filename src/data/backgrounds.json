@@ -1,0 +1,12 @@
+{
+	"light": [
+		{ "id": "reading", "name": "书页与咖啡", "file": "/backgrounds/light-reading.webp", "mobile": "/backgrounds/light-reading-mobile.webp", "position": "center", "photographer": "Kira auf der Heide", "source": "https://unsplash.com/photos/person-holding-white-ceramic-teacup-near-book-and-blanket-Bd99sJ4MKuU" },
+		{ "id": "desk", "name": "窗边晨读", "file": "/backgrounds/light-desk.webp", "mobile": "/backgrounds/light-desk-mobile.webp", "position": "center", "photographer": "Inka", "source": "https://unsplash.com/photos/a-cup-of-coffee-and-a-book-on-a-window-sill-9gZ5TQeTtZo" },
+		{ "id": "leaves", "name": "一枝绿意", "file": "/backgrounds/light-leaves.webp", "mobile": "/backgrounds/light-leaves-mobile.webp", "position": "center", "photographer": "tommao wang", "source": "https://unsplash.com/photos/room-with-white-window-curtains-zQL8a82z6Js" }
+	],
+	"dark": [
+		{ "id": "rain", "name": "雨夜窗边", "file": "/backgrounds/dark-rain.webp", "mobile": "/backgrounds/dark-rain-mobile.webp", "position": "center", "photographer": "Photogitthi", "source": "https://unsplash.com/photos/a-blurry-photo-of-a-rain-covered-window-8BGlaHVYpMs" },
+		{ "id": "forest", "name": "林间薄雾", "file": "/backgrounds/dark-forest.webp", "mobile": "/backgrounds/dark-forest-mobile.webp", "position": "center", "photographer": "Nathan Dumlao", "source": "https://unsplash.com/photos/gray-trees-FWiGZ8oGYE8" },
+		{ "id": "stars", "name": "山野星河", "file": "/backgrounds/dark-stars.webp", "mobile": "/backgrounds/dark-stars-mobile.webp", "position": "center", "photographer": "Sharad kachhi", "source": "https://unsplash.com/photos/the-night-sky-is-filled-with-stars-above-a-mountain-PMPmm23Ce4M" }
+	]
+}
